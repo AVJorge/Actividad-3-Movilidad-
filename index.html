@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="es-MX">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Calcula, compara y decide · Módulo 13</title>
+<meta name="description" content="Material interactivo del Módulo 13: proyección de población (AI3) y presupuesto, capacidad de pago e interés para elegir la mejor opción de compra (AI4).">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%232b5d8a'/%3E%3Cpolyline points='6,24 12,18 18,20 26,9' fill='none' stroke='white' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@400;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/styles.css">
+</head>
+<body>
+<header><div class="wrap">
+  <p class="kicker">Material de apoyo · Módulo 13</p>
+  <h1>Calcula, compara y decide</h1>
+  <p>Aquí aprendes el <b>procedimiento</b> con datos de ejemplo. Los resultados de tu actividad los calculas tú con los datos de la plataforma.</p>
+  <nav class="switch" aria-label="Actividad">
+    <a href="#ai3" id="sw-ai3">Actividad integradora 3<small>Proyección de población</small></a>
+    <a href="#ai4" id="sw-ai4">Actividad integradora 4<small>La mejor opción de compra</small></a>
+  </nav>
+</div></header>
+
+<noscript><div>Este material necesita JavaScript para funcionar. Actívalo en tu navegador y recarga la página.</div></noscript>
+
+<div class="activity" id="act3">
+<nav aria-label="Secciones de la actividad 3"><div class="wrap">
+  <a href="#analogia">1. Analogía</a>
+  <a href="#modelo">2. El modelo</a>
+  <a href="#simulador">3. Simulador</a>
+  <a href="#excel">4. En la hoja de cálculo</a>
+  <a href="#preguntas">5. Ruta por pregunta</a>
+  <a href="#errores">6. ¿Lo entendí?</a>
+  <a href="#lista">7. Antes de entregar</a>
+</div></nav>
+
+<main>
+<section class="intro"><span class="step">Actividad integradora 3 · A la universidad</span><h2>Proyección de una población con entradas y salidas</h2><p class="lead">Aprende a proyectar una población que recibe una cantidad fija de personas cada año y pierde un porcentaje, a construir la tabla en tu hoja de cálculo y a graficar el crecimiento.</p></section>
+
+<!-- 1. ANALOGÍA -->
+<section id="analogia">
+  <span class="step">Paso 1</span>
+  <h2>La tienda: lo que entra y lo que sale</h2>
+  <p class="lead">Imagina que tienes una tienda con <b>100 productos</b>. Cada mes <b>recibes 10 productos nuevos</b> del proveedor y <b>devuelves el 5 % de tu inventario</b> porque no se vendió o salió defectuoso.</p>
+  <p>Para saber cuántos productos tendrás el próximo mes, primero calcula cuántos salen de lo que <i>ya tienes</i>, réstalos y después suma los que entran. Si olvidas las salidas, tu inventario se ve inflado y no corresponde a la realidad. Avanza mes por mes y observa cómo crece la diferencia.</p>
+
+  <div class="store">
+    <div class="box ok"><small>Inventario real<br>(resta salidas y suma entradas)</small><div class="big" id="sOk">100</div></div>
+    <div class="flow">Mes <span id="sMes" class="mono">0</span><br>Diferencia:<br><span class="gap" id="sGap">0</span></div>
+    <div class="box bad"><small>Inventario inflado<br>(solo suma entradas)</small><div class="big" id="sBad">100</div></div>
+  </div>
+  <div class="row">
+    <button type="button" class="btn" id="sNext">Avanzar un mes ▸</button>
+    <button type="button" class="btn ghost" id="sReset">Reiniciar</button>
+  </div>
+  <div class="log" id="sLog" aria-live="polite">Presiona “Avanzar un mes” para ver el cálculo.</div>
+  <p class="small">Los resultados muestran un decimal para que veas el cálculo exacto. En tu actividad decide si redondeas y explícalo.</p>
+
+  <div class="note blue"><b>Relación con la actividad:</b> la universidad es la tienda. Los <b>estudiantes nuevos</b> son las entradas (la misma cantidad cada año) y los <b>estudiantes que se cambian</b> son las salidas (un porcentaje de quienes ya están inscritos). Como la salida es un porcentaje, su cantidad cambia cada año, porque la población también cambia.</div>
+</section>
+
+<!-- 2. MODELO -->
+<section id="modelo">
+  <span class="step">Paso 2</span>
+  <h2>El modelo en una línea</h2>
+  <p class="lead">Cada año se repite el mismo cálculo. La población al final de un año es el punto de partida del año siguiente.</p>
+  <div class="formula">
+    <span class="chip base">Población del año siguiente</span> =
+    <span class="chip base">Población actual</span>
+    − <span class="chip out">tasa de salida × Población actual</span>
+    + <span class="chip in">crecimiento fijo</span>
+  </div>
+  <div class="formula" style="font-size:16px"><span class="nw">P<sub>n+1</sub> = P<sub>n</sub> − (r × P<sub>n</sub>) + C</span> &nbsp;&nbsp;<span class="nw">equivale a</span>&nbsp;&nbsp; <span class="nw">P<sub>n+1</sub> = P<sub>n</sub>(1 − r) + C</span></div>
+
+  <div class="grid2">
+    <div>
+      <h3>Qué significa cada letra</h3>
+      <ul>
+        <li><b>P<sub>n</sub></b>: población al inicio del año <i>n</i>.</li>
+        <li><b>r</b>: porcentaje que sale cada año, escrito en decimal (por ejemplo, 3 % = 0.03).</li>
+        <li><b>C</b>: estudiantes que se agregan cada año (una cantidad fija, no un porcentaje).</li>
+      </ul>
+    </div>
+    <div>
+      <h3>Datos que dependen de P</h3>
+      <ul>
+        <li><b>Subgrupo</b> (por ejemplo, internacionales) = porcentaje × P<sub>n</sub> del año que te piden.</li>
+        <li><b>Salidas de un año</b> = r × P<sub>n</sub>.</li>
+        <li><b>Salidas acumuladas</b> = suma de las salidas de cada año del periodo.</li>
+        <li><b>Monto total</b> = P del año solicitado × costo por estudiante.</li>
+      </ul>
+    </div>
+  </div>
+  <div class="note"><b>Ojo:</b> no es lo mismo “2 % más cada año” que “500 más cada año”. Un porcentaje se calcula sobre la población de ese año; una cantidad fija siempre es igual. Este problema tiene de los dos tipos, por eso conviene calcular año por año en una tabla.</div>
+</section>
+
+<!-- 3. SIMULADOR -->
+<section id="simulador">
+  <span class="step">Paso 3</span>
+  <h2>Simulador con una universidad de ejemplo</h2>
+  <p class="lead">Practica con la <b>Universidad Ejemplo</b>. Los controles no permiten capturar los datos de Tijuana: el simulador sirve para entender el procedimiento, no para resolver tu actividad.</p>
+
+  <div class="ctrls">
+    <div class="ctrl"><label for="iP">Población actual <span class="val" id="vP"></span></label><input type="range" id="iP" min="5000" max="15000" step="500" value="12000"></div>
+    <div class="ctrl"><label for="iC">Crecimiento fijo por año <span class="val" id="vC"></span></label><input type="range" id="iC" min="200" max="1200" step="100" value="800"></div>
+    <div class="ctrl"><label for="iR">% que se cambia cada año <span class="val" id="vR"></span></label><input type="range" id="iR" min="1" max="4" step="0.5" value="3"></div>
+    <div class="ctrl"><label for="iI">% de estudiantes internacionales <span class="val" id="vI"></span></label><input type="range" id="iI" min="1" max="3" step="0.5" value="2"></div>
+    <div class="ctrl"><label for="iK">Costo anual por estudiante <span class="val" id="vK"></span></label><input type="range" id="iK" min="8000" max="14000" step="500" value="11000"></div>
+  </div>
+
+  <div class="row">
+    <button type="button" class="btn" id="tNext">Calcular el siguiente año ▸</button>
+    <button type="button" class="btn ghost" id="tAll">Mostrar toda la tabla</button>
+    <button type="button" class="btn ghost" id="tReset">Reiniciar</button>
+  </div>
+  <div class="explain" id="tExplain" aria-live="polite"></div>
+
+  <div class="tablewrap">
+    <table>
+      <thead><tr><th scope="col">Año</th><th scope="col">Población al inicio</th><th scope="col">Se cambian (r × P)</th><th scope="col">Nuevos (C)</th><th scope="col">Población al final</th><th scope="col">Internacionales</th><th scope="col">Monto requerido</th></tr></thead>
+      <tbody id="tBody"></tbody>
+      <tfoot><tr><th colspan="2" id="tAccLbl">Salidas acumuladas</th><th id="tAcc">—</th><th colspan="4"></th></tr></tfoot>
+    </table>
+  </div>
+  <p class="small">La población al <b>inicio</b> de un año es igual a la población al <b>final</b> del año anterior. Por eso, “la población dentro de 3 años” se lee en la columna <i>Población al inicio</i> del año 3.</p>
+
+  <h3>Gráfica del crecimiento</h3>
+  <div class="tabs" id="cTabs" role="group" aria-label="Dato que muestra la gráfica">
+    <button type="button" data-k="tot" class="on" aria-pressed="true">Población total</button>
+    <button type="button" data-k="int" aria-pressed="false">Internacionales</button>
+    <button type="button" data-k="out" aria-pressed="false">Salidas por año</button>
+    <button type="button" data-k="acc" aria-pressed="false">Salidas acumuladas</button>
+  </div>
+  <div class="chartbox"><svg id="chart" viewBox="0 0 720 300" width="100%" role="img" aria-label="Gráfica de crecimiento"></svg></div>
+  <p class="small">La gráfica solo muestra los años que ya calculaste. Para tu entrega, haz una gráfica por pregunta con los datos de tu propia tabla.</p>
+</section>
+
+<!-- 4. HOJA DE CÁLCULO -->
+<section id="excel">
+  <span class="step">Paso 4</span>
+  <h2>Cómo armarlo en tu hoja de cálculo</h2>
+  <p class="lead">Escribe los datos una sola vez en celdas de parámetros y haz que las fórmulas los lean. Así, si un dato cambia, toda la tabla se actualiza. Haz clic en una fórmula azul para ver qué hace.</p>
+
+  <div class="fbar"><b>fx</b><span id="ftext">Selecciona una celda azul.</span></div>
+  <div class="tablewrap">
+  <table class="sheet">
+    <tr><th></th><th>A</th><th>B</th><th>C</th><th>D</th><th>E</th><th>F</th><th>G</th></tr>
+    <tr><td class="rh">1</td><td class="lbl" colspan="2">PARÁMETROS</td><td></td><td></td><td></td><td></td><td></td></tr>
+    <tr><td class="rh">2</td><td class="lbl">Población actual</td><td class="inp">tu dato</td><td></td><td></td><td></td><td></td><td></td></tr>
+    <tr><td class="rh">3</td><td class="lbl">Crecimiento fijo</td><td class="inp">tu dato</td><td></td><td></td><td></td><td></td><td></td></tr>
+    <tr><td class="rh">4</td><td class="lbl">% que se cambia</td><td class="inp">tu dato (en %)</td><td></td><td></td><td></td><td></td><td></td></tr>
+    <tr><td class="rh">5</td><td class="lbl">% internacionales</td><td class="inp">tu dato (en %)</td><td></td><td></td><td></td><td></td><td></td></tr>
+    <tr><td class="rh">6</td><td class="lbl">Costo por estudiante</td><td class="inp">tu dato</td><td></td><td></td><td></td><td></td><td></td></tr>
+    <tr><td class="rh">7</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+    <tr><td class="rh">8</td><td class="lbl">Año</td><td class="lbl">Pob. inicio</td><td class="lbl">Se cambian</td><td class="lbl">Nuevos</td><td class="lbl">Pob. final</td><td class="lbl">Internacionales</td><td class="lbl">Monto</td></tr>
+    <tr><td class="rh">9</td><td>0</td><td class="f">=$B$2</td><td class="f">=B9*$B$4</td><td class="f">=$B$3</td><td class="f">=B9-C9+D9</td><td class="f">=B9*$B$5</td><td class="f">=B9*$B$6</td></tr>
+    <tr><td class="rh">10</td><td class="f">=A9+1</td><td class="f">=E9</td><td class="f">=B10*$B$4</td><td class="f">=$B$3</td><td class="f">=B10-C10+D10</td><td class="f">=B10*$B$5</td><td class="f">=B10*$B$6</td></tr>
+    <tr><td class="rh">11</td><td colspan="7" style="color:#777;font-family:'Source Sans 3',sans-serif">… copia la fila 10 hacia abajo (arrastrando la esquina de la celda) hasta cubrir los años que necesitas …</td></tr>
+    <tr><td class="rh">…</td><td class="lbl" colspan="2">Salidas acumuladas</td><td class="f">=SUMA(C9:C13)</td><td colspan="4"></td></tr>
+  </table>
+  </div>
+  <div class="explain" id="fexp" aria-live="polite">Aquí aparecerá la explicación de la fórmula.</div>
+
+  <div class="grid2">
+    <div class="note blue"><b>El signo $:</b> <span class="mono">$B$4</span> es una referencia absoluta. Al copiar la fórmula hacia abajo, <span class="mono">B9</span> cambia a <span class="mono">B10</span>, <span class="mono">B11</span>…, pero <span class="mono">$B$4</span> siempre apunta a la tasa. Sin el $, la fórmula buscaría la tasa en celdas vacías y daría cero.</div>
+    <div class="note"><b>Porcentajes:</b> si escribes <span class="mono">3%</span> en la celda, la hoja lo guarda como 0.03. Si escribes solo <span class="mono">3</span>, tendrías que dividir entre 100. Revisa que la celda tenga formato de porcentaje.</div>
+  </div>
+  <div class="note blue"><b>Redondeo:</b> una población no puede tener medio estudiante. Si decides redondear, usa <span class="mono">=REDONDEAR(B9*$B$4,0)</span>. Según la configuración de tu equipo, el separador puede ser coma (<span class="mono">,</span>) o punto y coma (<span class="mono">;</span>). Redondear o no cambia ligeramente los resultados; indica en tu hoja qué criterio usaste.</div>
+
+  <h3>Para graficar</h3>
+  <ol class="steps">
+    <li>Selecciona la columna <b>Año</b> y la columna que quieres mostrar (mantén presionada la tecla <span class="mono">Ctrl</span> para elegir columnas separadas).</li>
+    <li>Ve a <b>Insertar → Gráfico</b>. Una gráfica de líneas o de columnas funciona bien para mostrar el crecimiento en el tiempo.</li>
+    <li>Agrega título, nombre de los ejes (Años y Estudiantes) y etiquetas de datos.</li>
+    <li>Coloca cada gráfica junto a la pregunta que responde, en la hoja 1.</li>
+  </ol>
+  <p class="small">En Excel en inglés y en Google Sheets, <span class="mono">SUMA</span> se escribe <span class="mono">SUM</span> y <span class="mono">REDONDEAR</span> se escribe <span class="mono">ROUND</span>.</p>
+</section>
+
+<!-- 5. RUTA POR PREGUNTA -->
+<section id="preguntas">
+  <span class="step">Paso 5</span>
+  <h2>Ruta de trabajo para cada pregunta</h2>
+  <p class="lead">En cada pregunta identifica qué columna de tu tabla usas y en qué año la lees. No necesitas una tabla por pregunta: una sola tabla bien hecha responde las cuatro.</p>
+
+  <details>
+    <summary>Pregunta 1 · Estudiantes internacionales en 5 años</summary>
+    <ol class="steps">
+      <li>Construye la tabla de población año por año.</li>
+      <li>Calcula el porcentaje de internacionales sobre la población <b>de cada año</b>, no solo sobre la población actual.</li>
+      <li>Lee el valor del año 5 y grafica la columna de internacionales del año 0 al año 5.</li>
+    </ol>
+    <div class="note">Error frecuente: multiplicar el porcentaje por la población actual y luego por 5. El porcentaje se aplica a la población de ese año, que ya cambió.</div>
+  </details>
+
+  <details>
+    <summary>Pregunta 2 · Estudiantes que se cambiarán en 5 años</summary>
+    <ol class="steps">
+      <li>En cada año, la salida es el porcentaje multiplicado por la población con la que inicia ese año.</li>
+      <li>La pregunta se refiere a un periodo (“en 5 años”), así que suma las salidas de esos cinco años. En la hoja de ejemplo, las filas 9 a 13 corresponden a los años 0 a 4: cinco años de salidas.</li>
+      <li>Grafica las salidas de cada año o las salidas acumuladas, y explica en una línea cuál elegiste y por qué.</li>
+    </ol>
+    <div class="note">Reflexiona: si el porcentaje no cambia, ¿por qué las salidas no son iguales cada año?</div>
+  </details>
+
+  <details>
+    <summary>Pregunta 3 · Total de estudiantes dentro de 6 años</summary>
+    <ol class="steps">
+      <li>Aplica el modelo completo año tras año: población − salidas + nuevos.</li>
+      <li>Extiende tu tabla hasta el año 6 y lee la columna <i>Pob. inicio</i> de ese año (es la misma cifra que <i>Pob. final</i> del año 5).</li>
+      <li>Grafica la población total del año 0 al año 6.</li>
+    </ol>
+    <div class="note">Error frecuente: sumar el crecimiento fijo seis veces a la población actual sin restar las salidas. Es el “inventario inflado” de la tienda.</div>
+  </details>
+
+  <details>
+    <summary>Pregunta 4 · Monto necesario para el 2030</summary>
+    <ol class="steps">
+      <li>Define cuál es tu <b>año 0</b> (el “actualmente” del problema) y agrega una columna con el año calendario junto a la columna <i>Año</i>.</li>
+      <li>Cuenta cuántos años hay entre tu año 0 y 2030 para saber en qué fila leer la población.</li>
+      <li>Multiplica esa población por el costo anual por estudiante.</li>
+    </ol>
+    <div class="note">Escribe en tu hoja qué año tomaste como año 0. Así tu asesor puede seguir tu razonamiento.</div>
+  </details>
+
+  <details>
+    <summary>Hoja 2 · Tu opinión sobre la migración estudiantil</summary>
+    <ol class="steps">
+      <li>Busca datos de tu estado o localidad en fuentes oficiales, por ejemplo INEGI, ANUIES o la secretaría de educación de tu estado.</li>
+      <li>Incluye al menos un dato numérico con su fuente y año.</li>
+      <li>Relaciona la movilidad con la educación, la salud y el empleo: ¿qué pasa con los servicios cuando la población crece o se va?</li>
+      <li>Cita tus fuentes y, si las usaste, las herramientas de IA, conforme al manual vigente de PL-SEP.</li>
+    </ol>
+  </details>
+</section>
+
+<!-- 6. QUIZ -->
+<section id="errores">
+  <span class="step">Paso 6</span>
+  <h2>¿Lo entendí? Tres situaciones rápidas</h2>
+  <p class="lead">Elige una respuesta. Las situaciones usan la Universidad Ejemplo, no los datos de Tijuana.</p>
+  <div id="quiz"></div>
+</section>
+
+<!-- 7. CHECKLIST -->
+<section id="lista">
+  <span class="step">Paso 7</span>
+  <h2>Antes de entregar</h2>
+  <div class="check" id="check">
+    <label><input type="checkbox"> Mis datos están en celdas de parámetros y las fórmulas los usan.</label>
+    <label><input type="checkbox"> Mi tabla resta las salidas antes de sumar a los estudiantes nuevos.</label>
+    <label><input type="checkbox"> Los porcentajes se calculan sobre la población de cada año.</label>
+    <label><input type="checkbox"> Escribí qué año tomé como año 0 y en qué fila leí el 2030.</label>
+    <label><input type="checkbox"> Incluí una gráfica con título y ejes para las preguntas 1, 2 y 3.</label>
+    <label><input type="checkbox"> Las fórmulas se ven en la hoja 1 (no escribí solo los resultados).</label>
+    <label><input type="checkbox"> La hoja 2 tiene mi opinión con datos estadísticos y sus fuentes.</label>
+    <label><input type="checkbox"> Las referencias y el uso de IA están citados según el manual de PL-SEP.</label>
+    <label><input type="checkbox"> El archivo se llama Apellidos_Nombre_M13S2AI3 y está en formato .xlsx.</label>
+  </div>
+  <div class="prog" role="progressbar" aria-valuemin="0" aria-valuemax="9" aria-valuenow="0" id="pwrap"><div id="pbar"></div></div>
+  <p id="ptext" class="small">0 de 9</p>
+</section>
+
+</main>
+</div>
+<div class="activity" id="act4" hidden>
+<nav aria-label="Secciones de la actividad 4"><div class="wrap">
+  <a href="#presupuesto">1. Presupuesto</a>
+  <a href="#excedente">2. Excedente</a>
+  <a href="#interes">3. Interés</a>
+  <a href="#comparador">4. Comparador</a>
+  <a href="#excel4">5. En la hoja de cálculo</a>
+  <a href="#preguntas4">6. Ruta por pregunta</a>
+  <a href="#quiz4">7. ¿Lo entendí?</a>
+  <a href="#lista4">8. Antes de entregar</a>
+</div></nav>
+
+<main>
+<section class="intro"><span class="step">Actividad integradora 4 · La mejor opción</span><h2>Antes de pedir un crédito, revisa tu presupuesto</h2><p class="lead">Una compra a crédito solo es responsable si la mensualidad cabe en tu presupuesto. Por eso empezamos con un presupuesto personal, después calculamos cuánto dinero puedes destinar a deudas y al final comparamos opciones de compra con interés.</p></section>
+
+<!-- 1. PRESUPUESTO -->
+<section id="presupuesto">
+  <span class="step">Paso 1</span>
+  <h2>El presupuesto personal: ingresos − gastos = saldo</h2>
+  <p class="lead">Este es el presupuesto mensual de Ana, una estudiante que trabaja medio tiempo. Revisa sus ingresos y sus gastos. ¿Le alcanza?</p>
+
+  <div class="grid2 budget">
+    <div>
+      <h3 class="in-t">Ingresos mensuales</h3>
+      <table class="btable" id="bIn"></table>
+      <h3 class="out-t">Gastos mensuales</h3>
+      <table class="btable" id="bOut"></table>
+    </div>
+    <div>
+      <div class="saldo" id="bSaldoBox">
+        <div class="srow"><span>Total de ingresos</span><b id="bTi" class="mono"></b></div>
+        <div class="srow"><span>Total de gastos</span><b id="bTg" class="mono"></b></div>
+        <div class="srow total"><span>Saldo (ingresos − gastos)</span><b id="bSaldo" class="mono"></b></div>
+      </div>
+      <div class="bars" aria-hidden="true">
+        <div class="barl">Ingresos</div><div class="bar"><div id="barIn" class="fill in"></div></div>
+        <div class="barl">Gastos</div><div class="bar"><div id="barOut" class="fill out"></div></div>
+      </div>
+      <div class="explain" id="bMsg" aria-live="polite"></div>
+      <div class="row">
+        <button type="button" class="btn" id="bAdjust">Ajustar gastos variables ▸</button>
+        <button type="button" class="btn ghost" id="bReset">Volver al presupuesto original</button>
+        <button type="button" class="btn ghost" id="bMine">Usar mis propios datos</button>
+      </div>
+      <p class="small">Los gastos <b>fijos</b> (renta, transporte, servicios) son difíciles de reducir de un mes a otro. Los <b>variables</b> (comida fuera, ropa, salidas, suscripciones) son donde suele estar el ajuste. Puedes modificar cualquier cantidad.</p>
+    </div>
+  </div>
+
+  <div class="note blue"><b>¿Por qué empezar aquí?</b> En México, muchas personas gastan más de lo que ganan y cubren la diferencia con tarjetas o préstamos. La primera meta, antes de ahorrar, invertir o pedir un crédito, es tener un <b>excedente</b> cada mes, es decir, un saldo positivo.</div>
+</section>
+
+<!-- 2. EXCEDENTE -->
+<section id="excedente">
+  <span class="step">Paso 2</span>
+  <h2>Reparte el excedente: ahorro, crédito e inversión</h2>
+  <p class="lead">Cuando el saldo es positivo, decide qué porcentaje del excedente destinas a cada propósito. La parte de <b>crédito</b> es tu <b>capacidad de pago</b>: lo máximo que puedes comprometer cada mes en mensualidades sin desequilibrar tu presupuesto.</p>
+
+  <div class="row" id="dPresets" role="group" aria-label="Reparto sugerido">
+    <span class="small" style="margin-right:4px">Reparto:</span>
+    <button type="button" class="pill on" data-p="40,30,30">40 / 30 / 30</button>
+    <button type="button" class="pill" data-p="34,33,33">34 / 33 / 33</button>
+    <button type="button" class="pill" data-p="50,25,25">50 / 25 / 25</button>
+    <button type="button" class="pill" data-p="custom">Personalizado</button>
+  </div>
+  <div class="dist">
+    <div class="dcard sav"><label for="dA">Ahorro</label><div class="pin"><input type="number" id="dA" min="0" max="100" step="1" value="40"><span>%</span></div><b class="mono" id="mA"></b><small>Fondo para emergencias y metas</small></div>
+    <div class="dcard cre"><label for="dC">Crédito</label><div class="pin"><input type="number" id="dC" min="0" max="100" step="1" value="30"><span>%</span></div><b class="mono" id="mC"></b><small>Capacidad de pago mensual</small></div>
+    <div class="dcard inv"><label for="dI">Inversión</label><div class="pin"><input type="number" id="dI" min="0" max="100" step="1" value="30"><span>%</span></div><b class="mono" id="mI"></b><small>Dinero que genera rendimientos</small></div>
+  </div>
+  <div class="explain" id="dMsg" aria-live="polite"></div>
+</section>
+
+<!-- 3. INTERÉS -->
+<section id="interes">
+  <span class="step">Paso 3</span>
+  <h2>¿Cuánto pagas en realidad cuando compras a crédito?</h2>
+  <p class="lead">El interés es el costo de usar dinero prestado. Con una tasa mensual y un plazo en meses, el total a pagar se obtiene a partir del precio de contado.</p>
+
+  <div class="tabs" id="mTabs" role="group" aria-label="Tipo de interés">
+    <button type="button" data-m="simple" class="on" aria-pressed="true">Interés simple</button>
+    <button type="button" data-m="comp" aria-pressed="false">Interés compuesto</button>
+  </div>
+  <div class="formula" id="mFormula"></div>
+  <div class="grid2">
+    <div>
+      <h3>Qué significa cada letra</h3>
+      <ul>
+        <li><b>P</b>: precio de contado del artículo.</li>
+        <li><b>i</b>: tasa de interés mensual en decimal (por ejemplo, 3 % = 0.03).</li>
+        <li><b>n</b>: plazo en meses.</li>
+        <li><b>M</b>: monto total a pagar.</li>
+      </ul>
+    </div>
+    <div>
+      <h3>Ejemplo paso a paso</h3>
+      <p class="small" style="margin-top:0">Una tableta de <b>$8&nbsp;000</b> a <b>3 % mensual</b> durante <b>12 meses</b>.</p>
+      <div class="explain" id="mSteps" style="margin-top:0"></div>
+    </div>
+  </div>
+  <div class="note"><b>Importante:</b> el interés simple se calcula siempre sobre el precio original; el compuesto se calcula sobre el saldo que ya incluye intereses, por eso crece más rápido. Usa el tipo de interés que indique tu asesor y escríbelo en tu hoja de cálculo.</div>
+</section>
+
+<!-- 4. COMPARADOR -->
+<section id="comparador">
+  <span class="step">Paso 4</span>
+  <h2>Comparador de ejemplo: celular y audífonos</h2>
+  <p class="lead">Tres tiendas venden los mismos artículos con distinto precio y tasa. Los precios están fijos y las tasas solo van de 1 % a 5 %, así que no puedes capturar los datos de tu actividad. Cambia las tasas y observa qué pasa.</p>
+
+  <div class="tablewrap">
+    <table id="cmp">
+      <thead><tr><th scope="col">Tienda</th><th scope="col">Celular (contado)</th><th scope="col">Audífonos (contado)</th><th scope="col">Tasa mensual</th><th scope="col">Total celular</th><th scope="col">Total audífonos</th><th scope="col">Total de ambos</th><th scope="col">Mensualidad (12 pagos)</th></tr></thead>
+      <tbody id="cmpBody"></tbody>
+    </table>
+  </div>
+  <p class="small swipe">Desliza la tabla hacia los lados para ver todas las columnas.</p>
+  <p class="small">En verde, el menor total de cada columna. El método de interés es el que elegiste en el paso 3: <b id="cmpMethod"></b>.</p>
+
+  <div class="grid2">
+    <div class="opt" id="optStore"></div>
+    <div class="opt" id="optMix"></div>
+  </div>
+  <div class="opt" id="optCash"></div>
+  <div class="explain" id="cmpCap" aria-live="polite"></div>
+</section>
+
+<!-- 5. HOJA DE CÁLCULO -->
+<section id="excel4">
+  <span class="step">Paso 5</span>
+  <h2>Cómo armar la tabla en tu hoja de cálculo</h2>
+  <p class="lead">Captura los datos de la actividad en las columnas A a D y deja que las fórmulas calculen el resto. Haz clic en una fórmula azul para ver qué hace.</p>
+
+  <div class="tabs" id="xTabs" role="group" aria-label="Fórmulas para">
+    <button type="button" data-m="simple" class="on" aria-pressed="true">Interés simple</button>
+    <button type="button" data-m="comp" aria-pressed="false">Interés compuesto</button>
+  </div>
+  <div class="fbar"><b>fx</b><span id="ftext4">Selecciona una celda azul.</span></div>
+  <div class="tablewrap">
+  <table class="sheet" id="sheet4"></table>
+  </div>
+  <div class="explain" id="fexp4" aria-live="polite">Aquí aparecerá la explicación de la fórmula.</div>
+  <div class="grid2">
+    <div class="note blue"><b>Plazo en una celda:</b> escribe 12 en <span class="mono">J1</span> y úsalo como <span class="mono">$J$1</span>. Así tus fórmulas muestran de dónde sale el plazo y puedes probar otros plazos sin reescribirlas.</div>
+    <div class="note"><b>Compra combinada:</b> <span class="mono">MIN</span> de cada columna te dice el menor total por artículo, aunque provengan de tiendas distintas. Compáralo con el mejor total de una sola tienda.</div>
+  </div>
+  <p class="small">En Excel en inglés y en Google Sheets: <span class="mono">SUMA</span> = <span class="mono">SUM</span>, <span class="mono">INDICE</span> = <span class="mono">INDEX</span>, <span class="mono">COINCIDIR</span> = <span class="mono">MATCH</span>. Según la configuración de tu equipo, el separador de argumentos puede ser coma o punto y coma.</p>
+</section>
+
+<!-- 6. RUTA POR PREGUNTA -->
+<section id="preguntas4">
+  <span class="step">Paso 6</span>
+  <h2>Ruta de trabajo para cada parte</h2>
+
+  <details>
+    <summary>Llenar la tabla</summary>
+    <ol class="steps">
+      <li>Captura tienda, costos y tasa tal como aparecen en la actividad. Escribe la tasa con el símbolo % para que la hoja la guarde en decimal.</li>
+      <li>Calcula el total a pagar por la computadora y por la impresora con la fórmula del tipo de interés que corresponde.</li>
+      <li>Suma ambos totales en la última columna.</li>
+      <li>Verifica que cada resultado venga de una fórmula y no de un número escrito a mano.</li>
+    </ol>
+  </details>
+
+  <details>
+    <summary>Pregunta 1 · ¿Cuál es la mejor tienda para comprar ambos artículos?</summary>
+    <ol class="steps">
+      <li>Compara la columna <i>Total a pagar por ambos artículos</i>, no los precios de contado.</li>
+      <li>Identifica el menor total con <span class="mono">MIN</span>.</li>
+      <li>Justifica con números: cuánto pagarías y cuánto ahorras frente a las otras tiendas.</li>
+    </ol>
+    <div class="note">Error frecuente: elegir la tienda con el precio de contado más bajo sin revisar la tasa.</div>
+  </details>
+
+  <details>
+    <summary>Pregunta 2 · ¿Cómo comprar con el menor gasto?</summary>
+    <ol class="steps">
+      <li>Revisa cada artículo por separado: ¿en qué tienda es menor el total de la computadora?, ¿y el de la impresora?</li>
+      <li>Calcula el total de una compra combinada y compáralo con el de la mejor tienda.</li>
+      <li>Considera también el pago de contado: ¿cuánto te ahorras si juntas el dinero antes de comprar? Relaciónalo con tu capacidad de pago.</li>
+    </ol>
+  </details>
+
+  <details>
+    <summary>Estrategia para tu vida cotidiana</summary>
+    <ol class="steps">
+      <li>Describe tu criterio en pasos: comparar el total y no la mensualidad, revisar la tasa y el plazo, verificar que la mensualidad cabe en tu presupuesto.</li>
+      <li>Da un ejemplo de una compra real que harías con ese criterio.</li>
+      <li>Explica por qué el excedente mensual es la base para decidir si compras a crédito, de contado o si esperas.</li>
+    </ol>
+  </details>
+</section>
+
+<!-- 7. QUIZ -->
+<section id="quiz4">
+  <span class="step">Paso 7</span>
+  <h2>¿Lo entendí? Tres situaciones rápidas</h2>
+  <div id="quizB"></div>
+</section>
+
+<!-- 8. CHECKLIST -->
+<section id="lista4">
+  <span class="step">Paso 8</span>
+  <h2>Antes de entregar</h2>
+  <div class="check" id="check4">
+    <label><input type="checkbox"> La tabla tiene los datos de las tres tiendas y todas las columnas completas.</label>
+    <label><input type="checkbox"> Cada total viene de una fórmula visible en la hoja.</label>
+    <label><input type="checkbox"> Escribí qué tipo de interés usé y el plazo de 12 meses.</label>
+    <label><input type="checkbox"> Mi respuesta 1 compara el total de ambos artículos, con cifras.</label>
+    <label><input type="checkbox"> Mi respuesta 2 revisa cada artículo por separado y considera el pago de contado.</label>
+    <label><input type="checkbox"> Describí mi estrategia con pasos y un ejemplo de mi vida cotidiana.</label>
+    <label><input type="checkbox"> Cité fuentes y herramientas de IA según el manual vigente de PL-SEP.</label>
+    <label><input type="checkbox"> Nombré el archivo como indica la plataforma (Apellidos_Nombre_...AI4) y lo guardé en .xlsx.</label>
+  </div>
+  <div class="prog" role="progressbar" aria-valuemin="0" aria-valuemax="8" aria-valuenow="0" id="pwrap4"><div id="pbar4"></div></div>
+  <p id="ptext4" class="small">0 de 8</p>
+</section>
+</main>
+</div>
+
+<footer>Material de apoyo · Asesoría virtual · Módulo 13 · Actividades integradoras 3 y 4</footer>
+<script src="assets/app.js" defer></script>
+</body>
+</html>
